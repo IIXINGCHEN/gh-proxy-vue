@@ -19,10 +19,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-        cache: 'npm'
 
     - name: Install dependencies
-      run: npm ci
+      run: npm install
 
     - name: Run linter
       run: npm run lint
@@ -41,7 +40,6 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
-        cname: your-domain.com  # 如果您有自定义域名,请取消注释并填写
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
@@ -49,13 +47,14 @@ jobs:
         name: dist
         path: dist
 
-    - name: Notify Slack on failure
-      if: failure()
-      uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        text: 'Deployment failed!'
-        fields: repo,message,commit,author,action,eventName,ref,workflow
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    # 如果您不需要 Slack 通知，可以删除或注释掉以下步骤
+    # - name: Notify Slack on failure
+    #   if: failure()
+    #   uses: 8398a7/action-slack@v3
+    #   with:
+    #     status: ${{ job.status }}
+    #     text: 'Deployment failed!'
+    #     fields: repo,message,commit,author,action,eventName,ref,workflow
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
